@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
+class AvpzList extends Migration
 {
     /**
      * Run the migrations.
@@ -12,13 +12,11 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('avpz_list', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('login');
-            $table->string('password', 60);
-            $table->string('email');
-            $table->string('role');
-            $table->timestamp('lastVisit');
+            $table->string('title', 100);
+            $table->string('downloadLink');
+            $table->string('downloadLinkExe');
         });
     }
 
@@ -29,6 +27,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::drop('users');
+        //
     }
 }

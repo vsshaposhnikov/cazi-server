@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Token;
+use App\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -18,14 +20,14 @@ abstract class Controller extends BaseController
     }
     public function checkToken($token){
         $tokenFromDb = Token::where('token', $token)->get();
-        $whoseToken = $this->getCurrentUser($token);
+        //$whoseToken = $this->getCurrentUser($token);
         if(count($tokenFromDb) == 1){
             if(Carbon::now() > $tokenFromDb[0]->expirationDate){
                 Token::where('token', $tokenFromDb[0]->token)->delete();
                 return false;
             }
             else{
-                Token::where('token', $tokenFromDb[0]->token)->update(array('expirationDate' => $whoseToken->role == 'admin' ? Carbon::now()->addMinutes(60) : Carbon::now()->addYear(1)));
+                Token::where('token', $tokenFromDb[0]->token)->update(array('expirationDate' => Carbon::now()->addMinutes(60)));
                 return true;
             }
         }

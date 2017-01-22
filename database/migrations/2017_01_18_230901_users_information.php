@@ -20,8 +20,7 @@ class UsersInformation extends Migration
             $table->string('organization');
             $table->string('position');
             $table->string('phone')->nullable();
-            $table->string('email');
-            $table->string('avpz');
+            $table->boolean('isActive')->nullable();;
             $table->string('creator');
             $table->timestamp('creationDate');
 

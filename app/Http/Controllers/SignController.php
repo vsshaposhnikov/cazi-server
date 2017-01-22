@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\User;
+use App\UsersInfo;
 use App\Token;
 use Carbon\Carbon;
 class SignController extends Controller
@@ -28,6 +29,8 @@ class SignController extends Controller
                         )
                     );
                     $findUser[0]->token = $generatedToken;
+                    $userInfo = UsersInfo::where('userId', $findUser[0]->id)->get();
+                    $findUser[0]->userInfo = $userInfo[0];
                     return response($findUser[0], 200);
                 }
                 else{
@@ -37,6 +40,19 @@ class SignController extends Controller
             else{
                 return response('wrong credentials', 500);
             }
+        }
+    }
+
+    public function logout(Request $request){
+        if($request->input('token')){
+            $token = $request->input('token');
+            if(Token::where('token', $token)->delete() != 0){
+                return response('token destroyed', 200);
+            }
+            else{
+                return response('token not destroyed', 500);
+            }
+
         }
     }
 }
