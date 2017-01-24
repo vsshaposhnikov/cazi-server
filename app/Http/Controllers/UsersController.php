@@ -37,6 +37,7 @@ class UsersController extends Controller
 
         if(v::email()->validate($request->input('email'))){
             $email = $request->input('email');
+            $role = $request->input('role');
             $userInfo = $request->input('userInfo');
             $password = password_hash($request->input('password'), PASSWORD_BCRYPT);
             $login = $request->input('login');
@@ -65,9 +66,9 @@ class UsersController extends Controller
                         $newUser = User::create(
                             array(
                                 'login' => $login,
-                                'password' => $password,
+                                'password' => password_hash('11111', PASSWORD_BCRYPT),
                                 'email' => $email,
-                                'role' => 'user',
+                                'role' => $role,
                                 'lastVisit' => null
                             )
                         );
