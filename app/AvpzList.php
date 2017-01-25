@@ -11,6 +11,4 @@ class AvpzList extends Model
     protected $table = 'avpz_list';
 
     protected $fillable = ['id', 'title', 'downloadLink', 'downloadLinkExe'];
-
-    protected $hidden = ['id'];
 }
