@@ -37,6 +37,7 @@ class UsersController extends Controller
 
         if(v::email()->validate($request->input('email'))){
             $email = $request->input('email');
+            $avpzArray = $request->input('avpzArray');
             $role = $request->input('role');
             $userInfo = $request->input('userInfo');
             $password = password_hash($request->input('password'), PASSWORD_BCRYPT);
@@ -74,6 +75,9 @@ class UsersController extends Controller
                         );
                         if($newUser){
                             $newUser['userInfo'] = $this->createOrUpdateUserInfo($userInfo, $newUser['id']);
+                            foreach ($avpzArray as $avpzId) {
+                                DB::table('users_to_avpz')->insert([ ['userId' => $newUser['id'], 'avpzId' => $avpzId]]);
+                            }
                         }
                         return response($newUser, 200);
                     }
