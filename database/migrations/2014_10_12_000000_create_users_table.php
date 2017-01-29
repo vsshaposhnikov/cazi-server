@@ -18,7 +18,15 @@ class CreateUsersTable extends Migration
             $table->string('password', 60);
             $table->string('email');
             $table->string('role');
-            $table->timestamp('lastVisit');
+            $table->string('firstName', 100);
+            $table->string('lastName', 100);
+            $table->string('organization');
+            $table->string('position');
+            $table->string('phone')->nullable();
+            $table->string('creator');
+            $table->boolean('isActive')->nullable();
+            $table->timestamp('lastVisit')->nullable();
+            $table->timestamp('creationDate');
         });
     }
 

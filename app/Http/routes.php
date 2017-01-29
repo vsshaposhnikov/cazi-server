@@ -6,7 +6,10 @@ Route::get('/', function () {
 
 
 Route::post('/api/login', 'SignController@login');
-Route::post('/api/logout', 'SignController@logout');
-Route::post('/api/createOrUpdateUser', 'UsersController@createOrUpdateUser');
-Route::post('/api/getAllUsers', 'UsersController@getAllUsers');
-Route::post('/api/getAvpzList', 'AvpzListController@getAvpzList');
+Route::post('/api/logout', ['middleware' => 'apiAuth', 'uses' => 'SignController@logout']);
+Route::post('/api/createOrUpdateUser', ['middleware' => 'apiAuth', 'uses' => 'UsersController@createOrUpdateUser']);
+Route::post('/api/getAllUsers', ['middleware' => 'apiAuth', 'uses' => 'UsersController@getAllUsers']);
+Route::post('/api/getAvpzList', ['middleware' => 'apiAuth', 'uses' =>'AvpzListController@getAvpzList']);
+Route::post('/api/getAvpzListByUser', ['middleware' => 'apiAuth', 'uses' =>'AvpzListController@getAvpzListByUser']);
+Route::post('/api/getLegalBase', ['middleware' => 'apiAuth', 'uses' =>'LegalBaseController@getLegalBase']);
+Route::post('/api/getQuestionsAnswers', ['middleware' => 'apiAuth', 'uses' => 'QuestionsAnswersController@getQuestionsAnswers']);

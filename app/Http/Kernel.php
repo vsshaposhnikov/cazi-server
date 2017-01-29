@@ -21,6 +21,6 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'apiAuth' => \app\Http\Middleware\TokenMiddleware::class,
+        'apiAuth' => \App\Http\Middleware\TokenMiddleware::class,
     ];
 }

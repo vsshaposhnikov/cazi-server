@@ -15,6 +15,12 @@ class TokenMiddleware
      */
     public function handle($request, Closure $next)
     {
+        $userInfo = $request->input('userInfo');
+        if (!$userInfo['token'])
+        {
+            return response('no token', 500);
+        }
+
         return $next($request);
     }
 }

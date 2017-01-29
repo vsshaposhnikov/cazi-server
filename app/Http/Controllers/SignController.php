@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\User;
-use App\UsersInfo;
 use App\Token;
 use Carbon\Carbon;
 class SignController extends Controller
@@ -29,8 +28,6 @@ class SignController extends Controller
                         )
                     );
                     $findUser[0]->token = $generatedToken;
-                    $userInfo = UsersInfo::where('userId', $findUser[0]->id)->get();
-                    $findUser[0]->userInfo = $userInfo[0];
                     return response($findUser[0], 200);
                 }
                 else{

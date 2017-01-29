@@ -12,10 +12,14 @@ use App\User;
 use Carbon\Carbon;
 class UsersController extends Controller
 {
-    private function createOrUpdateUserInfo ($userInfo, $newUserId){
-        $newUserInfo = UsersInfo::create(
+    private function createUserInfo ($userInfo){
+        $newUserInfo = User::create(
             array(
-                'userId' => $newUserId,
+                'login' => $userInfo['login'],
+                'password' => password_hash('11111', PASSWORD_BCRYPT),
+                'email' => $userInfo['email'],
+                'role' => isset($userInfo['role']) ? $userInfo['role'] : $userInfo['role'] = 'user',
+                'lastVisit' => null,
                 'firstName' => $userInfo['firstName'],
                 'lastName' => $userInfo['lastName'],
                 'organization' => $userInfo['organization'],
@@ -30,81 +34,78 @@ class UsersController extends Controller
             return $newUserInfo;
         }
         else{
-            return 'userInfo did not create';
+            return false;
         }
     }
-    public function createOrUpdateUser(Request $request){
 
-        if(v::email()->validate($request->input('email'))){
-            $email = $request->input('email');
-            $avpzArray = $request->input('avpzArray');
-            $role = $request->input('role');
-            $userInfo = $request->input('userInfo');
-            $password = password_hash($request->input('password'), PASSWORD_BCRYPT);
-            $login = $request->input('login');
-            $duplicateEmail = User::where('email', $email)->get();
-            $loginEmail = User::where('login', $login)->get();
-            if($request->input('id')){
-                if(Controller::checkToken($request->input('token'))){
-                    $userId = $request->input('id');
-                    $updatedUser = User::where('id', $userId)->update(
-                        array(
-                            'login' => $login,
-                            'email' => $email,
-                            'password' => $password
-                        )
-                    );
-                    if ($updatedUser != 0) {
-                        return response(User::where('id', $userId)->get(), 200);
-                    } else {
-                        return response('user did not update', 500);
-                    }
-                }
-            }
-            else{
-                if(sizeof($duplicateEmail) == 0) {
-                    if (sizeof($loginEmail) == 0) {
-                        $newUser = User::create(
-                            array(
-                                'login' => $login,
-                                'password' => password_hash('11111', PASSWORD_BCRYPT),
-                                'email' => $email,
-                                'role' => $role,
-                                'lastVisit' => null
-                            )
-                        );
-                        if($newUser){
-                            $newUser['userInfo'] = $this->createOrUpdateUserInfo($userInfo, $newUser['id']);
-                            foreach ($avpzArray as $avpzId) {
-                                DB::table('users_to_avpz')->insert([ ['userId' => $newUser['id'], 'avpzId' => $avpzId]]);
-                            }
-                        }
-                        return response($newUser, 200);
-                    }
-                    else{
-                        return response('duplicate login', 500);
-                    }
-                }
-                else{
-                    return response('duplicate email', 500);
+    private function updateUserInfo ($userInfo){
+        $newUserInfo = User::where('id', $userInfo['id'])->update(
+            array(
+                'id' => $userInfo['id'],
+                'login' => $userInfo['login'],
+                'email' => $userInfo['email'],
+                'firstName' => $userInfo['firstName'],
+                'lastName' => $userInfo['lastName'],
+                'organization' => $userInfo['organization'],
+                'position' => $userInfo['position'],
+                'phone' => $userInfo['phone'],
+                'creator' => $userInfo['creator'],
+            )
+        );
+        if($newUserInfo != 0){
+            $newUserInfo = User::where('id', $userInfo['id'])->get();
+            return $newUserInfo;
+        }
+        else{
+            return false;
+        }
+    }
+
+    private function isDuplicate($email, $login){
+        if(v::email()->validate($email)){
+            if(count(User::where('email', $email)->get()) == 0){
+                if(count(User::where('login', $login)->get()) == 0){
+                    return true;
                 }
             }
         }
         else{
-            return response('invalid email', 500);
+            return false;
         }
     }
-    public function getAllUsers(Request $request){
 
-        if(Controller::checkToken($request->input('token'))){
-            $foundUsers = DB::select('
-SELECT * FROM users LEFT OUTER JOIN users_information ON users.id= users_information.userId
-');
+    public function createOrUpdateUser(Request $request) {
+        $userInfo = $request->input('userInfo');
+        if (Controller::checkToken($userInfo['token'])) {
+            if (isset($userInfo['id'])) {
+                return response($this->updateUserInfo($userInfo), 200);
+            } else {
+                if ($this->isDuplicate($userInfo['email'], $userInfo['login'])) {
+                    $newUser = $this->createUserInfo($userInfo);
+                    if ($newUser) {
+                        foreach ($userInfo['avpzArray'] as $avpzId) {
+                            DB::table('users_to_avpz')->insert([['userId' => $newUser['id'], 'avpzId' => $avpzId]]);
+                        }
+                    }
+                    return response($newUser, 200);
+                } else {
+                    return response('invalid email or login', 500);
+                }
+            }
+        } else {
+            return response('invalid token', 500);
+        }
+    }
+
+    public function getAllUsers(Request $request){
+        $userInfo = $request->input('userInfo');
+        if(Controller::checkToken($userInfo['token'])){
+            $foundUsers = User::all();
             if(sizeof($foundUsers) != 0){
                 return response($foundUsers, 200);
             }
             else{
-                return response('no users on this merchant point', 500);
+                return response('no users on this data', 500);
             }
         }
         else{
