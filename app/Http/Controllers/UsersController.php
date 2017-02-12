@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\UsersInfo;
+use App\AvpzList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Respect\Validation\Validator as v;
@@ -12,6 +12,14 @@ use App\User;
 use Carbon\Carbon;
 class UsersController extends Controller
 {
+    private function crateOrUpdateAvpz($avpz, $userId){
+            DB::table('users_to_avpz')->where('userId', $userId)->delete();
+            foreach ($avpz as $avpzId) {
+                DB::table('users_to_avpz')->insert([['userId' => $userId, 'avpzId' => $avpzId]]);
+            }
+            return true;
+    }
+
     private function createUserInfo ($userInfo){
         $newUserInfo = User::create(
             array(
@@ -33,9 +41,7 @@ class UsersController extends Controller
         if($newUserInfo){
             return $newUserInfo;
         }
-        else{
-            return false;
-        }
+        else{ return false; }
     }
 
     private function updateUserInfo ($userInfo){
@@ -52,13 +58,12 @@ class UsersController extends Controller
                 'creator' => $userInfo['creator'],
             )
         );
-        if($newUserInfo != 0){
+
+        if($newUserInfo){
             $newUserInfo = User::where('id', $userInfo['id'])->get();
             return $newUserInfo;
         }
-        else{
-            return false;
-        }
+        else { return false; }
     }
 
     private function isDuplicate($email, $login){
@@ -76,30 +81,27 @@ class UsersController extends Controller
 
     public function createOrUpdateUser(Request $request) {
         $userInfo = $request->input('userInfo');
-        if (Controller::checkToken($userInfo['token'])) {
+        $token = $request->input('token');
+        if (Controller::checkToken($token)) {
             if (isset($userInfo['id'])) {
-                return response($this->updateUserInfo($userInfo), 200);
+                $updatedUser = $this->updateUserInfo($userInfo);
+                if ($this->crateOrUpdateAvpz($userInfo['avpzArray'], $userInfo['id']) or $updatedUser){
+                    return response(!$updatedUser ? 'Оновлено тільки АВПЗ' : $updatedUser, 200);
+                }
             } else {
                 if ($this->isDuplicate($userInfo['email'], $userInfo['login'])) {
                     $newUser = $this->createUserInfo($userInfo);
-                    if ($newUser) {
-                        foreach ($userInfo['avpzArray'] as $avpzId) {
-                            DB::table('users_to_avpz')->insert([['userId' => $newUser['id'], 'avpzId' => $avpzId]]);
-                        }
+                    if($this->crateOrUpdateAvpz($userInfo['avpzArray'], $newUser['id'])){
+                        return response($newUser, 200);
                     }
-                    return response($newUser, 200);
-                } else {
-                    return response('invalid email or login', 500);
-                }
+                } else { return response('invalid email or login', 500); }
             }
-        } else {
-            return response('invalid token', 500);
-        }
+        } else { return response('invalid token', 500); }
     }
 
     public function getAllUsers(Request $request){
-        $userInfo = $request->input('userInfo');
-        if(Controller::checkToken($userInfo['token'])){
+        $token = $request->input('token');
+        if(Controller::checkToken($token)){
             $foundUsers = User::all();
             if(sizeof($foundUsers) != 0){
                 return response($foundUsers, 200);

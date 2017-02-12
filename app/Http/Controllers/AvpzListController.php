@@ -12,8 +12,7 @@ use App\Http\Controllers\Controller;
 class AvpzListController extends Controller
 {
     public function getAvpzList(Request $request){
-        $userInfo = $request->input('userInfo');
-        if (Controller::checkToken($userInfo['token'])) {
+        if (Controller::checkToken($request->input('token'))) {
             return response(AvpzList::all(), 200);
         } else {
             return response('invalid token', 500);
@@ -21,7 +20,7 @@ class AvpzListController extends Controller
     }
     public function getAvpzListByUser(Request $request){
         $userInfo = $request->input('userInfo');
-        if (Controller::checkToken($userInfo['token'])) {
+        if (Controller::checkToken($request->input('token'))) {
             return response(DB::select('
                                         SELECT *
                                         FROM avpz_list 

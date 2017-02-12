@@ -11,5 +11,5 @@ Route::post('/api/createOrUpdateUser', ['middleware' => 'apiAuth', 'uses' => 'Us
 Route::post('/api/getAllUsers', ['middleware' => 'apiAuth', 'uses' => 'UsersController@getAllUsers']);
 Route::post('/api/getAvpzList', ['middleware' => 'apiAuth', 'uses' =>'AvpzListController@getAvpzList']);
 Route::post('/api/getAvpzListByUser', ['middleware' => 'apiAuth', 'uses' =>'AvpzListController@getAvpzListByUser']);
-Route::post('/api/getLegalBase', ['middleware' => 'apiAuth', 'uses' =>'LegalBaseController@getLegalBase']);
-Route::post('/api/getQuestionsAnswers', ['middleware' => 'apiAuth', 'uses' => 'QuestionsAnswersController@getQuestionsAnswers']);
+Route::post('/api/getLegalBase', 'LegalBaseController@getLegalBase');
+Route::post('/api/getQuestionsAnswers', 'QuestionsAnswersController@getQuestionsAnswers');
