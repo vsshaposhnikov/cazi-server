@@ -114,4 +114,31 @@ class UsersController extends Controller
             return response('invalid token', 500);
         }
     }
+
+    public function changePassword(Request $request){
+
+        if(Controller::checkToken($request->input('token'))){
+            $userInfo = $request->input('userInfo');
+            $newPassword = password_hash($userInfo['newPassword'], PASSWORD_BCRYPT);
+            $currentUser = $this->getCurrentUser($request->input('token'));
+            if(password_verify($userInfo['oldPassword'], $currentUser->password)){
+                $updatedPassword = User::where('id', $currentUser->id)->update(array('password' => $newPassword));
+                if(count($updatedPassword) != 0){
+                    return response('password changed', 200);
+                }
+                else{
+                    return response('password not changed', 500);
+                }
+            }
+            else{
+                return response('old password is not correct', 200);
+            }
+        }
+        else{
+            return response('invalid token', 500);
+        }
+
+    }
+
+
 }

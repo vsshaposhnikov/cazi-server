@@ -52,4 +52,5 @@ class SignController extends Controller
 
         }
     }
+
 }
