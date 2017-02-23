@@ -99,21 +99,25 @@ class UsersController extends Controller
         } else { return response('invalid token', 500); }
     }
 
-    public function getAllUsers(Request $request){
-        $token = $request->input('token');
-        if(Controller::checkToken($token)){
-            $foundUsers = User::all();
-            if(sizeof($foundUsers) != 0){
-                return response($foundUsers, 200);
+
+    public function findUsers (Request $request){
+        if(Controller::checkToken($request->input('token'))){
+            $userInfo = $request->input('userInfo');
+            if($userInfo['searchWord'] == null){
+                User::where('id', '=<', 10)->get();
             }
-            else{
-                return response('no users on this data', 500);
-            }
+            $pointUsers = User::where('login', 'LIKE', '%'.$userInfo['searchWord'].'%')
+                ->orWhere('organization', 'LIKE', '%'.$userInfo['searchWord'].'%')
+                ->orWhere('email', 'LIKE', '%'.$userInfo['searchWord'].'%')
+                ->orWhere('firstName', 'LIKE', '%'.$userInfo['searchWord'].'%')
+                ->orWhere('lastName', 'LIKE', '%'.$userInfo['searchWord'].'%')->get();
+            return response( $pointUsers, 200);
         }
         else{
             return response('invalid token', 500);
         }
     }
+
 
     public function changePassword(Request $request){
 
