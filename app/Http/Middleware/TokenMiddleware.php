@@ -15,7 +15,8 @@ class TokenMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (!$request->input('token'))
+        //$fileUploadObj = $request->input('formData');
+        if (!$request->input('token') )//or !$fileUploadObj['token'])
         {
             return response('no token', 500);
         }

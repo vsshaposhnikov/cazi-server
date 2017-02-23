@@ -17,4 +17,5 @@ Route::post('/api/getQuestionsAnswers', 'QuestionsAnswersController@getQuestions
 Route::post('/api/createOrUpdateUser', ['middleware' => 'apiAuth', 'uses' => 'UsersController@createOrUpdateUser']);
 Route::post('/api/getAllUsers', ['middleware' => 'apiAuth', 'uses' => 'UsersController@getAllUsers']);
 Route::post('/api/findUsers', ['middleware' => 'apiAuth', 'uses' => 'UsersController@findUsers']);
+Route::post('/api/deleteAvpz', ['middleware' => 'apiAuth', 'uses' => 'AvpzListController@deleteAvpz']);
 Route::post('/api/createOrUpdateAvpz', 'AvpzListController@createOrUpdateAvpz');
