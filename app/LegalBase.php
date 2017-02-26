@@ -11,6 +11,4 @@ class LegalBase extends Model
     protected $table = 'legal_bases';
 
     protected $fillable = ['id', 'title', 'date', 'downloadLink'];
-
-    protected $hidden = ['id'];
 }

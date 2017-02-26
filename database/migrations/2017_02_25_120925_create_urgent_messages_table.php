@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLegalBasesTable extends Migration
+class CreateUrgentMessagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,13 @@ class CreateLegalBasesTable extends Migration
      */
     public function up()
     {
-        Schema::create('legal_bases', function (Blueprint $table) {
+        Schema::create('urgent_messages', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
-            $table->string('date');
-            $table->string('downloadLink')->nullable();
+            $table->string('title', 100);
+            $table->string('content');
+            $table->timestamp('createDate');
+            $table->string('creator');
+            $table->boolean('isPublished');
         });
     }
 
@@ -27,6 +29,6 @@ class CreateLegalBasesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('legal_bases');
+        //
     }
 }

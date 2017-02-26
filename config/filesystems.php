@@ -45,7 +45,7 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root'   => public_path('avpzStorage'),
+            'root'   => public_path(),
         ],
 
         'ftp' => [

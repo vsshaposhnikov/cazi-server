@@ -12,5 +12,4 @@ class QuestionsAnswers extends Model
 
     protected $fillable = ['id', 'question', 'answer'];
 
-    protected $hidden = ['id'];
 }

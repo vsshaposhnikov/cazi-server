@@ -91,9 +91,10 @@ class UsersController extends Controller
             } else {
                 if ($this->isDuplicate($userInfo['email'], $userInfo['login'])) {
                     $newUser = $this->createUserInfo($userInfo);
-                    if($this->crateOrUpdateAvpz($userInfo['avpzArray'], $newUser['id'])){
-                        return response($newUser, 200);
-                    }
+                    if(!isset($userInfo['role']))
+                        if($this->crateOrUpdateAvpz($userInfo['avpzArray'], $newUser['id'])){
+                            return response($newUser, 200);
+                        }
                 } else { return response('invalid email or login', 500); }
             }
         } else { return response('invalid token', 500); }
@@ -104,7 +105,7 @@ class UsersController extends Controller
         if(Controller::checkToken($request->input('token'))){
             $userInfo = $request->input('userInfo');
             if($userInfo['searchWord'] == null){
-                User::where('id', '=<', 10)->get();
+                User::where('id', '=<', 15)->get();
             }
             $pointUsers = User::where('login', 'LIKE', '%'.$userInfo['searchWord'].'%')
                 ->orWhere('organization', 'LIKE', '%'.$userInfo['searchWord'].'%')
@@ -144,5 +145,18 @@ class UsersController extends Controller
 
     }
 
+    public function setActive(Request $request){
+        if(Controller::checkToken($request->input('token'))){
+            $activate = User::where('id', $request->input('id'))->update([
+                'isActive' => 1
+            ]);
+            if($activate > 0)
+            return response( 'successful activate', 200);
+        }
+        else{
+            return response('invalid token', 500);
+        }
+
+    }
 
 }

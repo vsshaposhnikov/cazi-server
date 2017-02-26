@@ -15,8 +15,8 @@ class AvpzList extends Migration
         Schema::create('avpz_list', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title', 100);
-            $table->string('downloadLink');
-            $table->string('downloadLinkExe');
+            $table->string('downloadLink')->nullable();
+            $table->string('downloadLinkExe')->nullable();
         });
     }
 
