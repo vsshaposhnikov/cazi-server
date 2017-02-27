@@ -31,5 +31,12 @@ Route::post('/api/deleteQuestionsAnswers', ['middleware' => 'apiAuth', 'uses' =>
 Route::post('/api/createOrUpdateLegalBase', ['middleware' => 'apiAuth', 'uses' => 'LegalBaseController@createOrUpdateLegalBase']);
 Route::post('/api/deleteLegalBase', ['middleware' => 'apiAuth', 'uses' => 'LegalBaseController@deleteLegalBase']);
 Route::post('/api/uploadLegalBaseAttachment', ['middleware' => 'apiAuth', 'uses' => 'LegalBaseController@uploadLegalBaseAttachment']);
+Route::post('/api/getAllAvpzVendors', ['middleware' => 'apiAuth', 'uses' => 'AvpzVendorController@getAllAvpzVendors']);
+Route::post('/api/createOrUpdateAvpzVendor', ['middleware' => 'apiAuth', 'uses' => 'AvpzVendorController@createOrUpdateAvpzVendor']);
+Route::post('/api/deleteAvpzVendor', ['middleware' => 'apiAuth', 'uses' => 'AvpzVendorController@deleteAvpzVendor']);
+Route::post('/api/getAllAvpzNomenclatureUser', 'AvpzNumenclatureController@getAllAvpzNomenclatureUser');
+Route::post('/api/getAllAvpzNomenclature', ['middleware' => 'apiAuth', 'uses' => 'AvpzNumenclatureController@getAllAvpzNomenclature']);
+Route::post('/api/createOrUpdateAvpzNomenclature', ['middleware' => 'apiAuth', 'uses' => 'AvpzNumenclatureController@createOrUpdateAvpzNomenclature']);
+Route::post('/api/deleteAvpzNomenclature', ['middleware' => 'apiAuth', 'uses' => 'AvpzNumenclatureController@deleteAvpzNomenclature']);
 
 
