@@ -36,5 +36,18 @@ abstract class Controller extends BaseController
         }
     }
 
-
+    public function successRegistrationMail($mail, $login)
+    {
+        $to = $mail;
+        $subject = 'Успішна реєстрація аккаунту у системі CAZI';
+        $message = '<h3>Ваш логін: '.$login.'</h3>'.'<h3>Ваш пароль: 11111</h3><h4>Наполегливо просимо вас змінити пароль при першому вході в систему!</h4>';
+        $headers  = "Content-type: text/html; charset=utf-8 \r\n";
+        $send = mail($to, $subject, $message, $headers);
+        if($send){
+            return response(1, 200);
+        }
+        else{
+            return response(0, 200);
+        }
+    }
 }

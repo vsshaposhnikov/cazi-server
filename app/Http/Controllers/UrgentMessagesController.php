@@ -74,5 +74,24 @@ class UrgentMessagesController extends Controller
             return response('invalid token', 500);
         }
     }
-
+    public function adminMailRequest(Request $request)
+    {
+        if (Controller::checkToken($request->input('token'))) {
+            $adminRequest = $request->input('adminRequest');
+            $to = 'cazi@dsszzi.gov.ua';
+            $subject = 'Зверенення користувача';
+            $message = '<h2>Користувач з логіном: ' . $adminRequest['login'] . '. </h2><h2>ПІБ: ' . $adminRequest['firstName'] . ' ' . $adminRequest['lastName'] . ' </h2><h2>Email: ' . $adminRequest['email'] . '</h2><h2>звертається з свого особистого кабінету: </h2>';
+            $message .= '<h3>' . $adminRequest['title'] . '</h3>';
+            $message .= '<h4>' . $adminRequest['content'] . '</h4>';
+            $headers = "Content-type: text/html; charset=utf-8 \r\n";
+            $send = mail($to, $subject, $message, $headers);
+            if ($send) {
+                return response(1, 200);
+            } else {
+                return response(0, 200);
+            }
+        } else {
+            return response('invalid token', 500);
+        }
+    }
 }

@@ -24,6 +24,9 @@ class CreateUsersTable extends Migration
             $table->string('position');
             $table->string('phone')->nullable();
             $table->string('creator');
+            $table->integer('vendorId');
+            $table->integer('regionId');
+            $table->integer('govId');
             $table->boolean('isActive')->nullable();
             $table->timestamp('lastVisit')->nullable();
             $table->timestamp('creationDate');

@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\AvpzList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +34,7 @@ class UsersController extends Controller
                 'phone' => $userInfo['phone'],
                 'creator' => $userInfo['creator'],
                 'isActive' => 1,
-                'creationDate' => Carbon::now(),
+                'creationDate' => Carbon::today(),
             )
         );
         if($newUserInfo){
@@ -93,7 +92,9 @@ class UsersController extends Controller
                     $newUser = $this->createUserInfo($userInfo);
                     if(!isset($userInfo['role']))
                         if($this->crateOrUpdateAvpz($userInfo['avpzArray'], $newUser['id'])){
-                            return response($newUser, 200);
+                            if($this->successRegistrationMail($newUser['mail'], $newUser['login'])){
+                                return response($newUser, 200);
+                            }
                         }
                 } else { return response('invalid email or login', 500); }
             }
@@ -148,7 +149,8 @@ class UsersController extends Controller
     public function setActive(Request $request){
         if(Controller::checkToken($request->input('token'))){
             $activate = User::where('id', $request->input('id'))->update([
-                'isActive' => 1
+                'isActive' => 1,
+                'lastVisit' => Carbon::now()
             ]);
             if($activate > 0)
             return response( 'successful activate', 200);

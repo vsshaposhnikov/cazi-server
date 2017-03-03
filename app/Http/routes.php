@@ -26,6 +26,7 @@ Route::post('/api/createOrUpdateUrgentMsg', ['middleware' => 'apiAuth', 'uses' =
 Route::post('/api/deleteUrgentMsg', ['middleware' => 'apiAuth', 'uses' => 'UrgentMessagesController@deleteUrgentMsg']);
 Route::post('/api/publishUrgentMsg', ['middleware' => 'apiAuth', 'uses' => 'UrgentMessagesController@publishUrgentMsg']);
 Route::post('/api/getUrgentMsgList', ['middleware' => 'apiAuth', 'uses' => 'UrgentMessagesController@getUrgentMsgList']);
+Route::post('/api/adminMailRequest', ['middleware' => 'apiAuth', 'uses' => 'UrgentMessagesController@adminMailRequest']);
 Route::post('/api/createOrUpdateQuestionsAnswers', ['middleware' => 'apiAuth', 'uses' => 'QuestionsAnswersController@createOrUpdateQuestionsAnswers']);
 Route::post('/api/deleteQuestionsAnswers', ['middleware' => 'apiAuth', 'uses' => 'QuestionsAnswersController@deleteQuestionsAnswers']);
 Route::post('/api/createOrUpdateLegalBase', ['middleware' => 'apiAuth', 'uses' => 'LegalBaseController@createOrUpdateLegalBase']);
@@ -38,5 +39,8 @@ Route::post('/api/getAllAvpzNomenclatureUser', 'AvpzNumenclatureController@getAl
 Route::post('/api/getAllAvpzNomenclature', ['middleware' => 'apiAuth', 'uses' => 'AvpzNumenclatureController@getAllAvpzNomenclature']);
 Route::post('/api/createOrUpdateAvpzNomenclature', ['middleware' => 'apiAuth', 'uses' => 'AvpzNumenclatureController@createOrUpdateAvpzNomenclature']);
 Route::post('/api/deleteAvpzNomenclature', ['middleware' => 'apiAuth', 'uses' => 'AvpzNumenclatureController@deleteAvpzNomenclature']);
+Route::post('/api/getUserCreationInfo', ['middleware' => 'apiAuth', 'uses' => 'StatisticsController@getUserCreationInfo']);
+Route::post('/api/getCountGovOrganizations', ['middleware' => 'apiAuth', 'uses' => 'StatisticsController@getCountGovOrganizations']);
+Route::post('/api/getActiveUsers', ['middleware' => 'apiAuth', 'uses' => 'StatisticsController@getActiveUsers']);
 
 
