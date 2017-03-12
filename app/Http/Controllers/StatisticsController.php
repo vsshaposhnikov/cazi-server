@@ -41,7 +41,8 @@ class StatisticsController extends Controller
             $allRegions = DB::select('SELECT * FROM regions');
             $activeUsers = null;
             foreach ($allRegions as $count => $region){
-                $activeUsers['data'][$count] = User::whereRaw('isActive = ? and regionId = ?', [1, $region->id])->count();
+                $activeUsers['active'][$count] = User::whereRaw('isActive = ? and regionId = ?', [1, $region->id])->count();
+                $activeUsers['notActive'][$count] = User::whereRaw('isActive = ? and regionId = ?', [0, $region->id])->count();
                 $activeUsers['labels'][$count] = $region->regionName;
             }
 
