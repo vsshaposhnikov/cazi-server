@@ -46,4 +46,5 @@ class AvpzVendorController extends Controller
             return response('invalid token', 500);
         }
     }
+
 }

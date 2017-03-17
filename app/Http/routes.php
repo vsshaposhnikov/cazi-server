@@ -42,5 +42,7 @@ Route::post('/api/deleteAvpzNomenclature', ['middleware' => 'apiAuth', 'uses' =>
 Route::post('/api/getUserCreationInfo', ['middleware' => 'apiAuth', 'uses' => 'StatisticsController@getUserCreationInfo']);
 Route::post('/api/getCountGovOrganizations', ['middleware' => 'apiAuth', 'uses' => 'StatisticsController@getCountGovOrganizations']);
 Route::post('/api/getActiveUsers', ['middleware' => 'apiAuth', 'uses' => 'StatisticsController@getActiveUsers']);
+Route::post('/api/getRegionsList', ['middleware' => 'apiAuth', 'uses' => 'StatisticsController@getRegionsList']);
+Route::post('/api/getGovOrganizationList', ['middleware' => 'apiAuth', 'uses' => 'GovernmentController@getGovOrganizationList']);
 
 

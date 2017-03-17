@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\User;
+use App\Regions;
 use App\GovernmentOrganizations;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -63,4 +64,13 @@ class StatisticsController extends Controller
         }
 
     }
+
+    public function getRegionsList(Request $request){
+        if (Controller::checkToken($request->input('token'))) {
+            return response(Regions::all(), 200);
+        } else {
+            return response('invalid token', 500);
+        }
+    }
+
 }
