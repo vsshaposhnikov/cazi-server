@@ -20,8 +20,8 @@ class UsersController extends Controller
     }
 
     private function createUserInfo ($userInfo){
-        $newUserInfo = User::create(
-            array(
+        $statistics = $userInfo['statistics'];
+        $newUserInfo = User::create([
                 'login' => $userInfo['login'],
                 'password' => password_hash('11111', PASSWORD_BCRYPT),
                 'email' => $userInfo['email'],
@@ -33,10 +33,12 @@ class UsersController extends Controller
                 'position' => $userInfo['position'],
                 'phone' => $userInfo['phone'],
                 'creator' => $userInfo['creator'],
+                'regionId' => $statistics['regionId'],
+                'vendorId' => $statistics['vendorId'],
+                'govId' => $statistics['govId'],
                 'isActive' => 1,
                 'creationDate' => Carbon::today(),
-            )
-        );
+        ]);
         if($newUserInfo){
             return $newUserInfo;
         }
@@ -44,8 +46,8 @@ class UsersController extends Controller
     }
 
     private function updateUserInfo ($userInfo){
-        $newUserInfo = User::where('id', $userInfo['id'])->update(
-            array(
+        $statistics = $userInfo['statistics'];
+        $newUserInfo = User::where('id', $userInfo['id'])->update([
                 'id' => $userInfo['id'],
                 'login' => $userInfo['login'],
                 'email' => $userInfo['email'],
@@ -54,14 +56,12 @@ class UsersController extends Controller
                 'organization' => $userInfo['organization'],
                 'position' => $userInfo['position'],
                 'phone' => $userInfo['phone'],
+                'regionId' => $statistics['regionId'],
+                'vendorId' => $statistics['vendorId'],
+                'govId' => $statistics['govId'],
                 'creator' => $userInfo['creator'],
-            )
-        );
-
-        if($newUserInfo){
-            $newUserInfo = User::where('id', $userInfo['id'])->get();
-            return $newUserInfo;
-        }
+            ]);
+        if($newUserInfo){ return true; }
         else { return false; }
     }
 
@@ -85,7 +85,7 @@ class UsersController extends Controller
             if (isset($userInfo['id'])) {
                 $updatedUser = $this->updateUserInfo($userInfo);
                 if ($this->crateOrUpdateAvpz($userInfo['avpzArray'], $userInfo['id']) or $updatedUser){
-                    return response(!$updatedUser ? 'Оновлено тільки АВПЗ' : $updatedUser, 200);
+                    return response(!$updatedUser ? 'Оновлено тільки АВПЗ' : 'Оновлено тільки особисті дані', 200);
                 }
             } else {
                 if ($this->isDuplicate($userInfo['email'], $userInfo['login'])) {
@@ -106,14 +106,15 @@ class UsersController extends Controller
         if(Controller::checkToken($request->input('token'))){
             $userInfo = $request->input('userInfo');
             if($userInfo['searchWord'] == null){
-                User::where('id', '=<', 15)->get();
+                $pointUsers = DB::table('users')->limit(10)->get();
+            } else {
+                $pointUsers = User::where('login', 'LIKE', '%'.$userInfo['searchWord'].'%')
+                    ->orWhere('organization', 'LIKE', '%'.$userInfo['searchWord'].'%')
+                    ->orWhere('email', 'LIKE', '%'.$userInfo['searchWord'].'%')
+                    ->orWhere('firstName', 'LIKE', '%'.$userInfo['searchWord'].'%')
+                    ->orWhere('lastName', 'LIKE', '%'.$userInfo['searchWord'].'%')->get();
             }
-            $pointUsers = User::where('login', 'LIKE', '%'.$userInfo['searchWord'].'%')
-                ->orWhere('organization', 'LIKE', '%'.$userInfo['searchWord'].'%')
-                ->orWhere('email', 'LIKE', '%'.$userInfo['searchWord'].'%')
-                ->orWhere('firstName', 'LIKE', '%'.$userInfo['searchWord'].'%')
-                ->orWhere('lastName', 'LIKE', '%'.$userInfo['searchWord'].'%')->get();
-            return response( $pointUsers, 200);
+            return response($pointUsers, 200);
         }
         else{
             return response('invalid token', 500);

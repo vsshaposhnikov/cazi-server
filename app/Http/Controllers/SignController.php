@@ -43,14 +43,14 @@ class SignController extends Controller
     public function login(Request $request){
         if($request->input('login')){
             $login = $request->input('login');
-            $findUser = User::where('login', $login)->get();
+            $findUser = User::where('login', $login)->first();
             if(sizeof($findUser) != 0){
-                if($this->isActive($findUser[0]))   {
-                    $lastVisit = new Carbon($findUser[0]->lastVisit);
-                    if($lastVisit->addDays(7) >  Carbon::now()) {
-                    return response($this->userVerify($findUser[0], $request->input('password')), 200);
+                if($this->isActive($findUser) or $findUser->role == 'admin') {
+                    $lastVisit = new Carbon($findUser->lastVisit);
+                    if($lastVisit->addDays(7) >  Carbon::now() or $findUser->role == 'admin') {
+                    return response($this->userVerify($findUser, $request->input('password')), 200);
                     } else {
-                        if(User::where('id', $findUser[0]->id)->update(['isActive' => 0]) > 0)
+                        if(User::where('id', $findUser->id)->update(['isActive' => 0]) > 0)
                         return response('account blocked', 200);
                     }
                 } else { return response('account notActive', 200); }

@@ -15,7 +15,6 @@ Route::post('/api/getQuestionsAnswers', 'QuestionsAnswersController@getQuestions
 
 //admin methods
 Route::post('/api/createOrUpdateUser', ['middleware' => 'apiAuth', 'uses' => 'UsersController@createOrUpdateUser']);
-Route::post('/api/getAllUsers', ['middleware' => 'apiAuth', 'uses' => 'UsersController@getAllUsers']);
 Route::post('/api/findUsers', ['middleware' => 'apiAuth', 'uses' => 'UsersController@findUsers']);
 Route::post('/api/setActive', ['middleware' => 'apiAuth', 'uses' => 'UsersController@setActive']);
 Route::post('/api/deleteAvpz', ['middleware' => 'apiAuth', 'uses' => 'AvpzListController@deleteAvpz']);
@@ -44,5 +43,6 @@ Route::post('/api/getCountGovOrganizations', ['middleware' => 'apiAuth', 'uses' 
 Route::post('/api/getActiveUsers', ['middleware' => 'apiAuth', 'uses' => 'StatisticsController@getActiveUsers']);
 Route::post('/api/getRegionsList', ['middleware' => 'apiAuth', 'uses' => 'StatisticsController@getRegionsList']);
 Route::post('/api/getGovOrganizationList', ['middleware' => 'apiAuth', 'uses' => 'GovernmentController@getGovOrganizationList']);
+Route::post('/api/createGovOrganization', ['middleware' => 'apiAuth', 'uses' => 'GovernmentController@createGovOrganization']);
 
 

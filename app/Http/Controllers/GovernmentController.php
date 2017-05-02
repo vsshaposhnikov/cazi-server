@@ -18,4 +18,16 @@ class GovernmentController extends Controller
         }
     }
 
+    public function createGovOrganization(Request $request){
+        if (Controller::checkToken($request->input('token'))) {
+            $newGovOrganization = GovernmentOrganizations::create([
+                'organizationName' => $request->input('organizationName')
+            ]);
+            if($newGovOrganization){return response($newGovOrganization, 200);}
+            else{return response('government organization not created', 500);}
+        } else {
+            return response('invalid token', 500);
+        }
+    }
+
 }

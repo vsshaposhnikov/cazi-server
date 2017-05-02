@@ -19,7 +19,7 @@ class User extends Model
 
     protected $fillable = [ 'id', 'login', 'password', 'role',
                             'email', 'lastVisit', 'creator', 'lastName',
-                            'firstName', 'isActive', 'phone', 'position', 'organization', 'creationDate'];
+                            'firstName', 'isActive', 'phone', 'position', 'organization', 'creationDate', 'govId', 'vendorId', 'regionId'];
 
     protected $hidden = ['password'];
 }
